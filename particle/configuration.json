@@ -1,11 +1,19 @@
 {
-	"access_token" : "c2ffac1a877fc1cbc61834b24a533fe80534cc1a",
+	"access_token" : "<youraccesstokenhere>",
 	"errorlogfilename" : "errors.log",
 	"datalogfilename" : "datalog.json",
 	"devices":[
-		{"deviceId": "1f003e000651353530373132", "variableName": "temperature"},
-		{"deviceId": "1f003e000651353530373132", "variableName": "heateron"},
-		{"deviceId": "36001b001551353531343431", "variableName": "temperature"},
-		{"deviceId": "36001b001551353531343431", "variableName": "heateron"}
+		{"deviceId": "<yourdeviceidhere>", "variableName": "temperature"},
+		{"deviceId": "<yourdeviceidhere>", "variableName": "heateron"},
+		{"deviceId": "<yourdeviceidhere>", "variableName": "tempsetpoint"}
+	],
+	"heater":[
+		{
+			"deviceId": "<yourdeviceidhere>", 
+			"days":[
+				{"day": 5, "start":"10:00","stop":"13:10", "tempsetpoint":18},
+				{"day": 6, "start":"10:00","stop":"18:30", "tempsetpoint":22}
+			]
+		}
 	]
 }
