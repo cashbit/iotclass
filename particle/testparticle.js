@@ -84,6 +84,19 @@ function callFunction(deviceId,functionName,args,callback){
   req.write(JSON.stringify({ arg: args.toString() }));
   req.end();
 }
+
+function callFunctionIfVariableValueIsDifferent(deviceId,functionName,variableName,value,callback){
+    readVariable(deviceId,variableName,function(response){
+        if (typeof response.result == "undefinded") {
+            if (callback) callback(response) ;
+            return ;
+        }
+        if (response.result.toString() != value.toString()) {
+            callFunction(deviceId,functionName,value,callback);
+        } else if (callback) callback(response) ;
+    });
+}
+
 /*
 var i = 0 ;
 setInterval(function(){
@@ -136,11 +149,11 @@ setInterval(function(){
     console.log("heaterOn",heaterOn,"tempsetpoint",tempsetpoint) ;
 
     if (tempsetpoint) {
-        callFunction(device.deviceId,"settemp",tempsetpoint,function(body){
-            callFunction(device.deviceId,"setheater",heaterOn);
-        });
+        callFunctionIfVariableValueIsDifferent(device.deviceId, "settemp", "tempsetpoint", tempsetpoint,function(response){
+            callFunctionIfVariableValueIsDifferent(device.deviceId, "setheater", "heateron", heaterOn);
+        })
     } else {
-        callFunction(device.deviceId,"setheater",heaterOn);
+        callFunctionIfVariableValueIsDifferent(device.deviceId, "setheater", "heateron", heaterOn);
     }
  
     h++ ;
