@@ -52,7 +52,7 @@ function readVariable(deviceId,variableName){
     }); 
 }
 
-function callFunction(deviceId,functionName,args){
+function callFunction(deviceId,functionName,args,callback){
 
   var options = {
     "method": "POST",
@@ -75,10 +75,11 @@ function callFunction(deviceId,functionName,args){
     res.on("end", function () {
       var body = Buffer.concat(chunks);
       console.log(body.toString());
+      if (callback) callback(body) ;
     });
   });
 
-  req.write(JSON.stringify({ arg: args }));
+  req.write(JSON.stringify({ arg: args.toString() }));
   req.end();
 }
 /*
@@ -95,45 +96,51 @@ var h = 0;
 setInterval(function(){
     var device = heater[h] ;
     console.log(device) ;
-    /*
-    { 
-        deviceId: '36001b001551353531343431',
-        start: '10:00',
-        stop: '18:00' 
-    }
-    */
 
     var heaterOn = "false" ;
+    var tempsetpoint ;
 
     var dateTime = new Date() ;
-    
-    var start = device.start ;
-    var startComponents = start.split(":") ;
-    var startHour = startComponents[0] ;
-    var startMinute = startComponents[1] ;
+    device.days.forEach(function(day){
+        // {"day": 1, "start":"10:00","stop":"10:30", "tempsetpoint":18}
+        if (dateTime.getDay() != day.day) return ;
 
-    var stop = device.stop ;
-    var stopComponents = stop.split(":") ;
-    var stopHour = stopComponents[0] ;
-    var stopMinute = stopComponents[1] ;
+        var start = day.start ;
+        var startComponents = start.split(":") ;
+        var startHour = startComponents[0] ;
+        var startMinute = startComponents[1] ;
 
-    if (dateTime.getHours() >= startHour){
-        if (dateTime.getMinutes() >= startMinute){
-            if (dateTime.getHours() < stopHour){
-                heaterOn = "true" ;
-            } else if (
-                dateTime.getHours() == stopHour && 
-                dateTime.getMinutes() <= stopMinute
-                ){
-                heaterOn = "true" ; 
+        var stop = day.stop ;
+        var stopComponents = stop.split(":") ;
+        var stopHour = stopComponents[0] ;
+        var stopMinute = stopComponents[1] ;
+
+        if (dateTime.getHours() >= startHour){
+            if (dateTime.getMinutes() >= startMinute){
+                if (dateTime.getHours() < stopHour){
+                    heaterOn = "true" ;
+                    tempsetpoint = day.tempsetpoint ;
+                } else if (
+                    dateTime.getHours() == stopHour && 
+                    dateTime.getMinutes() <= stopMinute
+                    ){
+                    heaterOn = "true" ; 
+                    tempsetpoint = day.tempsetpoint ;
+                }
             }
         }
+    })
+    
+    console.log("heaterOn",heaterOn,"tempsetpoint",tempsetpoint) ;
+
+    if (tempsetpoint) {
+        callFunction(device.deviceId,"settemp",tempsetpoint,function(body){
+            callFunction(device.deviceId,"setheater",heaterOn);
+        });
+    } else {
+        callFunction(device.deviceId,"setheater",heaterOn);
     }
-
-    console.log("hearterOn",heaterOn) ;
-
-    //callFunction(device.deviceId,"setheater",heaterOn);
-
+ 
     h++ ;
     if (h == heater.length) h = 0 ;
-},3000);
+},5000);
