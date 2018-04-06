@@ -16,7 +16,7 @@ function errorManager(err){
     console.log(err) ;
 }
 
-function readVariable(deviceId,variableName){
+function readVariable(deviceId,variableName,callback){
     var start = new Date();
     https.get({
         host: 'api.particle.io',    
@@ -42,10 +42,12 @@ function readVariable(deviceId,variableName){
                     deltaT : deltaT
                 };
                 fs.appendFile(configuration.datalogfilename,JSON.stringify(obj)+"\n\r",errorManager) ;
+                if (callback) callback(obj) ;
             } catch (e){
                 console.log("Error:",e,body) ;
                 var errObj = { datetime: new Date(), e: e, body: body} ;
                 fs.appendFile(configuration.errorlogfilename,JSON.stringify(errObj),errorManager);
+                if (callback) callback(e) ;
             }
         });
 
