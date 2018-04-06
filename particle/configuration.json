@@ -1,0 +1,11 @@
+{
+	"access_token" : "c2ffac1a877fc1cbc61834b24a533fe80534cc1a",
+	"errorlogfilename" : "errors.log",
+	"datalogfilename" : "datalog.json",
+	"devices":[
+		{"deviceId": "1f003e000651353530373132", "variableName": "temperature"},
+		{"deviceId": "1f003e000651353530373132", "variableName": "heateron"},
+		{"deviceId": "36001b001551353531343431", "variableName": "temperature"},
+		{"deviceId": "36001b001551353531343431", "variableName": "heateron"}
+	]
+}
