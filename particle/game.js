@@ -4,12 +4,10 @@ var https = require('https');
 
 var fs = require('fs');
 
-var configurationData   = fs.readFileSync('configuration.json') ;
+var configurationData   = fs.readFileSync('../config/configuration.json') ;
 var configuration       = JSON.parse(configurationData) ;
 
 var access_token = configuration.access_token ;
-
-var heater = configuration.heater ;
 
 function errorManager(err){
     if (!err) return ;
@@ -97,72 +95,7 @@ function callFunctionIfVariableValueIsDifferent(deviceId,functionName,variableNa
     });
 }
 
-/*
-var i = 0 ;
-setInterval(function(){
-    var device = configuration.devices[i] ;
-    readVariable(device.deviceId,device.variableName) ;
-    i++ ;
-    if (i == configuration.devices.length) i = 0 ;
-},3000);
-*/
-
-var h = 0;
-setInterval(function(){
-    var device = heater[h] ;
-    console.log(device) ;
-
-    var heaterOn = "false" ;
-    var tempsetpoint ;
-
-    var dateTime = new Date() ;
-    device.days.forEach(function(day){
-        // {"day": 1, "start":"10:00","stop":"10:30", "tempsetpoint":18}
-        if (dateTime.getDay() != day.day) return ;
-
-        var start = day.start ;
-        var startComponents = start.split(":") ;
-        var startHour = startComponents[0] ;
-        var startMinute = startComponents[1] ;
-
-        var stop = day.stop ;
-        var stopComponents = stop.split(":") ;
-        var stopHour = stopComponents[0] ;
-        var stopMinute = stopComponents[1] ;
-
-        if (dateTime.getHours() >= startHour){
-            if (dateTime.getMinutes() >= startMinute){
-                if (dateTime.getHours() < stopHour){
-                    heaterOn = "true" ;
-                    tempsetpoint = day.tempsetpoint ;
-                } else if (
-                    dateTime.getHours() == stopHour && 
-                    dateTime.getMinutes() <= stopMinute
-                    ){
-                    heaterOn = "true" ; 
-                    tempsetpoint = day.tempsetpoint ;
-                }
-            }
-        }
-    })
-    
-    console.log("heaterOn",heaterOn,"tempsetpoint",tempsetpoint) ;
-
-    if (tempsetpoint) {
-        callFunctionIfVariableValueIsDifferent(device.deviceId, "settemp", "tempsetpoint", tempsetpoint,function(response){
-            callFunctionIfVariableValueIsDifferent(device.deviceId, "setheater", "heateron", heaterOn);
-        })
-    } else {
-        callFunctionIfVariableValueIsDifferent(device.deviceId, "setheater", "heateron", heaterOn);
-    }
- 
-    h++ ;
-    if (h == heater.length) h = 0 ;
-},5000);
-
-
-
-function listenForEvents(){
+function listenForEvents(eventname,callback){
     var EventSource = require('eventsource');
         var eventSource;
         var particleUrl="https://api.particle.io/v1/devices/events?access_token="+access_token;
@@ -194,13 +127,15 @@ function listenForEvents(){
         };
     
         eventSource.addEventListener(eventname,function(e) {
-            //console.log("eventsource EVENT:")
-            //console.log(e);
-            Fiber = Npm.require('fibers');
-            Fiber(function(){
-                data = JSON.parse(e.data);
-                console.log("eventsource - EVENTDATA:",data);
-                callback(data)
-            }).run();
+            console.log("eventsource EVENT:")
+            console.log(e);
+            e.parseddata = JSON.parse(e.data) ;
+            callback(e) ;
         });
 }
+
+listenForEvents('variableChanged',function(e){
+    console.log(typeof e.parseddata, e.parseddata)
+    var deviceId = e.parseddata.coreid ;
+    callFunction(deviceId,"message","setalarm:2");
+}) ;
