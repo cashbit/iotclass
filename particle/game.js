@@ -139,7 +139,13 @@ listenForEvents('variableChanged',function(e){
     var deviceId = e.parseddata.coreid ;
     //callFunction(deviceId,"message","setalarm:2");
     if (e.parseddata.data.indexOf("button2") > -1) choosePlayer() ;
+    if (e.parseddata.data.indexOf("deltaLight:low") > -1) {
+        score();
+        printScore();
+    }
 }) ;
+
+var datamodel = {} ;
 
 var teamId = 0 ;
 
@@ -156,5 +162,23 @@ function choosePlayer(){
     var randomNumber = Math.random() ;
     console.log("randomNumber",randomNumber) ;
     var thisPlayer = Math.floor((randomNumber * totPlayers));
-    console.log("choosePlayer",team.name, team.players[thisPlayer].name) ;
+
+    datamodel.selectedTeam = team ;
+    datamodel.selectedPlayer = team.players[thisPlayer] ;
+
+    console.log("choosePlayer",datamodel.selectedTeam.name, datamodel.selectedPlayer.name) ;
+}
+
+function score(){
+    datamodel.selectedTeam.score = datamodel.selectedTeam.score || 0 ;
+    datamodel.selectedTeam.score++ ;
+
+    datamodel.selectedPlayer.score = datamodel.selectedPlayer.score || 0 ;
+    datamodel.selectedPlayer.score++ ;
+}
+
+function printScore(){
+    configuration.teams.forEach(function(team){
+        console.log(team.name,team.score) ;
+    })
 }
