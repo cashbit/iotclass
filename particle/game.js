@@ -138,7 +138,7 @@ listenForEvents('variableChanged',function(e){
     console.log(typeof e.parseddata, e.parseddata)
     var deviceId = e.parseddata.coreid ;
     //callFunction(deviceId,"message","setalarm:2");
-    if (e.parseddata.data.indexOf("button2") > -1) choosePlayer() ;
+    if (e.parseddata.data.indexOf("button2") > -1) startGame() ;
     if (e.parseddata.data.indexOf("deltaLight:low") > -1) {
         score();
         printScore();
@@ -148,6 +148,26 @@ listenForEvents('variableChanged',function(e){
 var datamodel = {} ;
 
 var teamId = 0 ;
+
+var playerTimeout ;
+var gameTimeout ;
+
+function startGame(){
+    if (datamodel.gameStarted) return console.log("Game already running....") ;
+    datamodel.gameStarted = true ;
+    configuration.teams.forEach(function(team){
+        team.score = 0 ;
+    });
+    gameTimeout = setTimeout(endGame,configuration.maxTimePerGame) ;
+    choosePlayer();
+}
+
+function endGame(){
+    printScore() ;
+    teamId = 0 ;
+    datamodel.gameStarted = false ;
+    clearTimeout(gameTimeout) ;
+}
 
 function chooseTeam(){
     var team = configuration.teams[teamId] ;
@@ -167,6 +187,7 @@ function choosePlayer(){
     datamodel.selectedPlayer = team.players[thisPlayer] ;
 
     console.log("choosePlayer",datamodel.selectedTeam.name, datamodel.selectedPlayer.name) ;
+    playerTimeout = setTimeout(choosePlayer,configuration.timeout) ;
 }
 
 function score(){
@@ -175,6 +196,9 @@ function score(){
 
     datamodel.selectedPlayer.score = datamodel.selectedPlayer.score || 0 ;
     datamodel.selectedPlayer.score++ ;
+
+    clearTimeout(playerTimeout) ;
+    choosePlayer();
 }
 
 function printScore(){
