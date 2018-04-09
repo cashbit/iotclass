@@ -135,13 +135,15 @@ function listenForEvents(eventname,callback){
 }
 
 listenForEvents('variableChanged',function(e){
-    console.log(typeof e.parseddata, e.parseddata)
+    //console.log(typeof e.parseddata, e.parseddata)
     var deviceId = e.parseddata.coreid ;
     //callFunction(deviceId,"message","setalarm:2");
     if (e.parseddata.data.indexOf("button2") > -1) startGame() ;
+    if (e.parseddata.data.indexOf("button1") > -1) endGame() ;
     if (e.parseddata.data.indexOf("deltaLight:low") > -1) {
         score();
         printScore();
+        choosePlayer();
     }
 }) ;
 
@@ -154,6 +156,7 @@ var gameTimeout ;
 
 function startGame(){
     if (datamodel.gameStarted) return console.log("Game already running....") ;
+    console.log("Game started") ;
     datamodel.gameStarted = true ;
     configuration.teams.forEach(function(team){
         team.score = 0 ;
@@ -166,7 +169,9 @@ function endGame(){
     printScore() ;
     teamId = 0 ;
     datamodel.gameStarted = false ;
+    clearTimeout(playerTimeout) ;
     clearTimeout(gameTimeout) ;
+    console.log("Game over !!!!") ;
 }
 
 function chooseTeam(){
@@ -180,7 +185,6 @@ function choosePlayer(){
     var team = chooseTeam() ;
     var totPlayers = team.players.length ;
     var randomNumber = Math.random() ;
-    console.log("randomNumber",randomNumber) ;
     var thisPlayer = Math.floor((randomNumber * totPlayers));
 
     datamodel.selectedTeam = team ;
@@ -198,7 +202,6 @@ function score(){
     datamodel.selectedPlayer.score++ ;
 
     clearTimeout(playerTimeout) ;
-    choosePlayer();
 }
 
 function printScore(){
