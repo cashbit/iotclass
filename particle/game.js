@@ -127,8 +127,8 @@ function listenForEvents(eventname,callback){
         };
     
         eventSource.addEventListener(eventname,function(e) {
-            console.log("eventsource EVENT:")
-            console.log(e);
+            //console.log("eventsource EVENT:")
+            //console.log(e);
             e.parseddata = JSON.parse(e.data) ;
             callback(e) ;
         });
@@ -137,5 +137,24 @@ function listenForEvents(eventname,callback){
 listenForEvents('variableChanged',function(e){
     console.log(typeof e.parseddata, e.parseddata)
     var deviceId = e.parseddata.coreid ;
-    callFunction(deviceId,"message","setalarm:2");
+    //callFunction(deviceId,"message","setalarm:2");
+    if (e.parseddata.data.indexOf("button2") > -1) choosePlayer() ;
 }) ;
+
+var teamId = 0 ;
+
+function chooseTeam(){
+    var team = configuration.teams[teamId] ;
+    teamId++ ;
+    if (!configuration.teams[teamId]) teamId = 0 ;
+    return team ;
+}
+
+function choosePlayer(){
+    var team = chooseTeam() ;
+    var totPlayers = team.players.length ;
+    var randomNumber = Math.random() ;
+    console.log("randomNumber",randomNumber) ;
+    var thisPlayer = Math.floor((randomNumber * totPlayers));
+    console.log("choosePlayer",team.name, team.players[thisPlayer].name) ;
+}
