@@ -31,3 +31,7 @@ button {
     width:100px;
     vertical-align: middle;
 }
+
+.activeplayer {
+    background-color: white ;
+}
