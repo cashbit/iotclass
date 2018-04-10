@@ -17,7 +17,7 @@
             <div id="gamestatus">
                 Game time 
             </div>
-            <div class="big-text">00:00:00</div>
+            <div class="big-text" id="gametime">00:00:00</div>
             <div>
                 <button onclick="gameStart();">START</button>
                 <button onclick="gameStop();">STOP</button>
@@ -26,33 +26,33 @@
         <div class="topspacer">
             <table>
                 <tr>
-                    <td class="center-text big-text">Team 1</td>
-                    <td class="center-text big-text">Team 2</td>
+                    <td class="center-text big-text" id="team1">Team 1</td>
+                    <td class="center-text big-text" id="team2">Team 2</td>
                 </tr>
                 <tr>
-                    <td class="center-text big-text">Score 1:0</td>
-                    <td class="center-text big-text">Score 2:0</td>
+                    <td class="center-text big-text" id="score1">Score 1:0</td>
+                    <td class="center-text big-text" id="score2">Score 2:0</td>
                 </tr>
                 <tr>
                     <td class="center-text">
                         <div>
-                            <div>Player 1</div>
-                            <div>Player 2</div>
-                            <div>Player 3</div>
-                            <div>Player 4</div>
+                            <div id="player1-team1">Player 1</div>
+                            <div id="player2-team1">Player 2</div>
+                            <div id="player3-team1">Player 3</div>
+                            <div id="player4-team1">Player 4</div>
                         </div>
                     </td>
                     <td class="center-text">
                         <div>
-                            <div>Player 1</div>
-                            <div>Player 2</div>
-                            <div>Player 3</div>
-                            <div>Player 4</div>
+                            <div id="player1-team2">Player 1</div>
+                            <div id="player2-team2">Player 2</div>
+                            <div id="player3-team2">Player 3</div>
+                            <div id="player4-team2">Player 4</div>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-        <div class="center-text topspacer">Player time: <span>00:00</span></div>
+        <div class="center-text topspacer">Player time: <span id="playertime">00:00</span></div>
     </body>
 </html>
