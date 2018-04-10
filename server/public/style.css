@@ -23,6 +23,10 @@ button {
     font-size:1.6em;
 }
 
+.topspacer {
+    margin-top:20px;
+}
+
 .logo {
     width:100px;
     vertical-align: middle;

@@ -8,20 +8,22 @@
     </head>
     <body>
         <div class="center-text">
-            <h1>
+            <h4 style="margin-bottom:0px">
                 <img class="logo" src="img/LOGO.png" />
                 Our Basket
-            </h1>
+            </h4>
         </div>
-        <div class="center-text">
+        <div class="center-text topspacer">
             <div id="gamestatus">
                 Game time 
             </div>
-            <button onclick="gameStart();">START</button>
-            <span class="big-text">00:00:00</span>
-            <button onclick="gameStop();">STOP</button>
+            <div class="big-text">00:00:00</div>
+            <div>
+                <button onclick="gameStart();">START</button>
+                <button onclick="gameStop();">STOP</button>
+            </div>
         </div>
-        <div>
+        <div class="topspacer">
             <table>
                 <tr>
                     <td class="center-text big-text">Team 1</td>
@@ -50,7 +52,7 @@
                     </td>
                 </tr>
             </table>
-            <div class="center-text">Player time: <span>00:00</span></div>
         </div>
+        <div class="center-text topspacer">Player time: <span>00:00</span></div>
     </body>
 </html>
