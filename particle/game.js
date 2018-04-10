@@ -147,37 +147,53 @@ listenForEvents('variableChanged',function(e){
     }
 }) ;
 
-var datamodel = {} ;
-
-var teamId = 0 ;
+var datamodel = {
+    teamId : 0
+} ;
 
 var playerTimeout ;
 var gameTimeout ;
+
+function saveGame(){
+    var filename = configuration.datalogfilename ;
+    fs.writeFile(filename,JSON.stringify(datamodel),errorManager) ;
+}
+
+function loadGame(){
+    var filename = configuration.datalogfilename ;
+    var gameData = fs.readFileSync(filename) ;
+    datamodel = JSON.parse(gameData) ;
+    console.log("datamodel",datamodel) ;
+}
 
 function startGame(){
     if (datamodel.gameStarted) return console.log("Game already running....") ;
     console.log("Game started") ;
     datamodel.gameStarted = true ;
+    datamodel.teamId = 0 ;
     configuration.teams.forEach(function(team){
         team.score = 0 ;
     });
     gameTimeout = setTimeout(endGame,configuration.maxTimePerGame) ;
     choosePlayer();
+    saveGame();
 }
 
 function endGame(){
     printScore() ;
-    teamId = 0 ;
+    datamodel.teamId = 0 ;
     datamodel.gameStarted = false ;
     clearTimeout(playerTimeout) ;
     clearTimeout(gameTimeout) ;
     console.log("Game over !!!!") ;
+    saveGame();
 }
 
 function chooseTeam(){
-    var team = configuration.teams[teamId] ;
-    teamId++ ;
-    if (!configuration.teams[teamId]) teamId = 0 ;
+    var team = configuration.teams[datamodel.teamId] ;
+    datamodel.teamId++ ;
+    if (!configuration.teams[datamodel.teamId]) datamodel.teamId = 0 ;
+    saveGame();
     return team ;
 }
 
@@ -192,6 +208,7 @@ function choosePlayer(){
 
     console.log("choosePlayer",datamodel.selectedTeam.name, datamodel.selectedPlayer.name) ;
     playerTimeout = setTimeout(choosePlayer,configuration.timeout) ;
+    saveGame();
 }
 
 function score(){
@@ -202,6 +219,7 @@ function score(){
     datamodel.selectedPlayer.score++ ;
 
     clearTimeout(playerTimeout) ;
+    saveGame();
 }
 
 function printScore(){
@@ -209,3 +227,5 @@ function printScore(){
         console.log(team.name,team.score) ;
     })
 }
+
+loadGame();

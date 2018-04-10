@@ -1,0 +1,19 @@
+body {
+    margin-left:10px;
+    margin-right:10px;
+    font-size: 2em;
+    font-family: "Arial", Helvetica, sans-serif;
+    background-color: #E77C11;
+}
+
+table {
+    width: 100%;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.logo {
+    width:100px;
+}

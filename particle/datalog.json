@@ -1,3 +1,1 @@
-{"datetime":"2018-04-05T11:07:02.309Z","deviceId":"1f003e000651353530373132","variableName":"temperature","result":16.7,"deltaT":3427}
-{"datetime":"2018-04-05T11:07:04.433Z","deviceId":"1f003e000651353530373132","variableName":"heateron","result":false,"deltaT":2524}
-
+{"gameStarted":false,"teamId":0,"selectedTeam":{"name":"team2","players":[{"name":"player 2 1"},{"name":"player 2 2","score":1},{"name":"player 2 3"},{"name":"player 2 4"}],"score":1},"selectedPlayer":{"name":"player 2 3"}}yer 1 3"}}
