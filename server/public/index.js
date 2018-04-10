@@ -2,13 +2,16 @@ console.log("Start");
 
 function gameStart(){
     console.log("gameStart") ;
+    datamodel.gameStartTime = new Date().getTime() ;
     datamodel.gamestatus  = "Started" ;
+    datamodel.gametimer = setInterval(updateTimes,500) ;
     updateView(datamodel) ;
 }
 
 function gameStop(){
     console.log("gameStop") ;
     datamodel.gamestatus  = "Stopped" ;
+    clearInterval(datamodel.gametimer) ;
     updateView(datamodel) ;
 }
 
@@ -20,6 +23,20 @@ function updateView(data){
     });
     var activeplayer = data.activeplayer ;
     document.getElementById(activeplayer).className = "activeplayer" ;
+}
+
+function toMinuteSeconds(milliseconds){
+    var seconds = Math.floor(milliseconds / 1000) ;
+    var minutes = Math.floor(seconds / 60) ;
+    var onlySixtySeconds = seconds - minutes * 60 ;
+    return minutes + " : " + onlySixtySeconds ;
+}
+
+function updateTimes(){
+    var now = new Date().getTime(); 
+    datamodel.elapsedGameSeconds = now - datamodel.gameStartTime ;
+    datamodel.gametime = toMinuteSeconds(datamodel.elapsedGameSeconds) ;
+    updateView(datamodel) ;
 }
 
 var datamodel = {
@@ -38,5 +55,9 @@ var datamodel = {
     "player2-team2":"P 2 2",
     "player3-team2":"P 3 2",
     "player4-team2":"P 4 2",
-    "activeplayer": "player3-team1"
+    "activeplayer": "player3-team1",
+    "gameStartTime" : 0,
+    "elapsedGameSeconds" : 0,
+    "playerStartTime" : 0,
+    "elapsedPlayerSeconds" : 0
 } ;
