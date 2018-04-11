@@ -5,7 +5,6 @@ var socket ;
 function load(){
     socket = io();
     socket.on("model",function(msg){
-        console.log("model",msg) ;
         datamodel.server = msg ;
         updateModel();
         updateView(datamodel) ;
@@ -31,11 +30,23 @@ function gameStop(){
 }
 
 function updateView(data){
+
+    document.getElementById("player1-team1").className = "" ;
+    document.getElementById("player2-team1").className = "" ;
+    document.getElementById("player3-team1").className = "" ;
+    document.getElementById("player4-team1").className = "" ;
+    document.getElementById("player1-team2").className = "" ;
+    document.getElementById("player2-team2").className = "" ;
+    document.getElementById("player3-team2").className = "" ;
+    document.getElementById("player4-team2").className = "" ;
+
+
     Object.keys(data).forEach(function(id){
         //console.log("id",id,data[id]) ;
         var element = document.getElementById(id) ;
         if (element) element.innerHTML = data[id] ;
     });
+    
     var activeplayer = data.activeplayer ;
     if (document.getElementById(activeplayer)) document.getElementById(activeplayer).className = "activeplayer" ;
 }
@@ -79,6 +90,9 @@ function updateModel(){
     
     datamodel.score1 = datamodel.server.configuration.teams[0].score ;
     datamodel.score2 = datamodel.server.configuration.teams[1].score ;
+
+    datamodel.activeplayer = "player"  + (datamodel.server.selectedPlayerId + 1) + 
+                             "-team"   + (datamodel.server.teamId + 1) ;
     
     datamodel["player1-team1"] = datamodel.server.configuration.teams[0].players[0].name ;
     datamodel["player2-team1"] = datamodel.server.configuration.teams[0].players[1].name ;
@@ -88,4 +102,5 @@ function updateModel(){
     datamodel["player2-team2"] = datamodel.server.configuration.teams[1].players[1].name ;
     datamodel["player3-team2"] = datamodel.server.configuration.teams[1].players[2].name ;
     datamodel["player4-team2"] = datamodel.server.configuration.teams[1].players[3].name ;
+
 }

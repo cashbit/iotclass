@@ -235,10 +235,13 @@ function toMinuteSeconds(milliseconds){
 
 function updateTimes(){
     var now = new Date().getTime(); 
+
     datamodel.elapsedGameMilliSeconds = now - datamodel.gameStartTime ;
     datamodel.gametime = toMinuteSeconds(datamodel.elapsedGameMilliSeconds) ;
+
     datamodel.elapsedPlayerMilliSeconds = now - datamodel.playerStartTime ;
     datamodel.playertime = toMinuteSeconds(datamodel.elapsedPlayerMilliSeconds) ;
+
     saveGame();
 }
 
@@ -269,6 +272,7 @@ function choosePlayer(){
 
     datamodel.selectedTeam = team ;
     datamodel.selectedPlayer = team.players[thisPlayer] ;
+    datamodel.selectedPlayerId = thisPlayer ;
     datamodel.playerStartTime = new Date().getTime() ;
 
     console.log("choosePlayer",datamodel.selectedTeam.name, datamodel.selectedPlayer.name) ;
