@@ -6,7 +6,7 @@ function load(){
     socket = io();
     socket.on("model",function(msg){
         console.log("model",msg) ;
-        datamodel = msg ;
+        datamodel.server = msg ;
         updateView(datamodel) ;
     })
 
