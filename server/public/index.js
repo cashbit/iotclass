@@ -23,13 +23,11 @@ function load(){
 
 
 function gameStart(){
-    audio1.play() ;
     console.log("gameStart") ;
     socket.emit('gameStart','ciao');
 }
 
 function gameStop(){
-    audio2.play();
     console.log("gameStop") ;
     socket.emit('gameStop','ciao');
 }
@@ -79,13 +77,24 @@ var datamodel = {
     "elapsedPlayerSeconds" : 0
 } ;
 
+var lastGameStatus ;
+var lastSelectedPlayerId ;
+
 function updateModel(){
 
     if (datamodel.server.gameStarted == true){
         datamodel.gamestatus = "Play" ;
+        if (lastGameStatus != datamodel.gamestatus) {
+            audio1.play();
+        }
     } else {
         datamodel.gamestatus = "Game over" ;
+        if (lastGameStatus != datamodel.gamestatus) {
+            audio2.play();
+        }
     }
+
+    lastGameStatus = datamodel.gamestatus ;
 
     datamodel.gametime = datamodel.server.gametime ;
     datamodel.playertime = datamodel.server.playertime ;
@@ -98,6 +107,12 @@ function updateModel(){
 
     datamodel.activeplayer = "player"  + (datamodel.server.selectedPlayerId + 1) + 
                              "-team"   + (datamodel.server.teamId + 1) ;
+
+    if (lastSelectedPlayerId != datamodel.server.selectedPlayerId)  {
+        audio1.play()
+    }    
+    
+    lastSelectedPlayerId = datamodel.server.selectedPlayerId ;
     
     datamodel["player1-team1"] = datamodel.server.configuration.teams[0].players[0].name ;
     datamodel["player2-team1"] = datamodel.server.configuration.teams[0].players[1].name ;
