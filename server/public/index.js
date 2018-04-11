@@ -1,10 +1,21 @@
 console.log("Start");
 
+var socket ;
+
+function load(){
+    socket = io();
+    socket.on("model",function(msg){
+        console.log("model",msg) ;
+    })
+    updateView(datamodel) ;
+}
+
 function gameStart(){
     console.log("gameStart") ;
+    socket.emit('gameStart','ciao');
     datamodel.gameStartTime = new Date().getTime() ;
     datamodel.gamestatus  = "Started" ;
-    datamodel.gametimer = setInterval(updateTimes,500) ;
+    //datamodel.gametimer = setInterval(updateTimes,500) ;
     updateView(datamodel) ;
 }
 
