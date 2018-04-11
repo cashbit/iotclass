@@ -72,6 +72,7 @@ function updateModel(){
     }
 
     datamodel.gametime = datamodel.server.gametime ;
+    datamodel.playertime = datamodel.server.playertime ;
 
     datamodel.team1 = datamodel.server.configuration.teams[0].name ;
     datamodel.team2 = datamodel.server.configuration.teams[1].name ;
