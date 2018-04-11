@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eventsource": "^1.0.5",
     "express": "^4.16.3",
     "socket.io": "^2.1.0"
   }

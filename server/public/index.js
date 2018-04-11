@@ -6,34 +6,35 @@ function load(){
     socket = io();
     socket.on("model",function(msg){
         console.log("model",msg) ;
+        datamodel = msg ;
+        updateView(datamodel) ;
     })
+
+    socket.on("warning",function(msg){
+        console.log("warning",msg) ;
+    })
+
     updateView(datamodel) ;
 }
 
 function gameStart(){
     console.log("gameStart") ;
     socket.emit('gameStart','ciao');
-    datamodel.gameStartTime = new Date().getTime() ;
-    datamodel.gamestatus  = "Started" ;
-    //datamodel.gametimer = setInterval(updateTimes,500) ;
-    updateView(datamodel) ;
 }
 
 function gameStop(){
     console.log("gameStop") ;
-    datamodel.gamestatus  = "Stopped" ;
-    clearInterval(datamodel.gametimer) ;
-    updateView(datamodel) ;
+    socket.emit('gameStop','ciao');
 }
 
 function updateView(data){
     Object.keys(data).forEach(function(id){
-        console.log("id",id,data[id]) ;
+        //console.log("id",id,data[id]) ;
         var element = document.getElementById(id) ;
         if (element) element.innerHTML = data[id] ;
     });
     var activeplayer = data.activeplayer ;
-    document.getElementById(activeplayer).className = "activeplayer" ;
+    if (document.getElementById(activeplayer)) document.getElementById(activeplayer).className = "activeplayer" ;
 }
 
 function toMinuteSeconds(milliseconds){
