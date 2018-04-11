@@ -35,3 +35,21 @@ button {
 .activeplayer {
     background-color: white ;
 }
+
+.col {
+    width: 50%;
+}
+
+#gamestatus{
+    color: green;
+}
+
+#buttonStart{
+    color:white ;
+    background-color: green; 
+}
+
+#buttonStop{
+    color:white ;
+    background-color: red; 
+}
