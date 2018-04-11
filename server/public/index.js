@@ -2,6 +2,9 @@ console.log("Start");
 
 var socket ;
 
+var audio1 = new Audio('/audio/beep-07.mp3'); 
+var audio2 = new Audio('/audio/beep-09.mp3'); 
+
 function load(){
     socket = io();
     socket.on("model",function(msg){
@@ -20,11 +23,13 @@ function load(){
 
 
 function gameStart(){
+    audio1.play() ;
     console.log("gameStart") ;
     socket.emit('gameStart','ciao');
 }
 
 function gameStop(){
+    audio2.play();
     console.log("gameStop") ;
     socket.emit('gameStop','ciao');
 }
@@ -46,7 +51,7 @@ function updateView(data){
         var element = document.getElementById(id) ;
         if (element) element.innerHTML = data[id] ;
     });
-    
+
     var activeplayer = data.activeplayer ;
     if (document.getElementById(activeplayer)) document.getElementById(activeplayer).className = "activeplayer" ;
 }
