@@ -7,6 +7,7 @@ function load(){
     socket.on("model",function(msg){
         console.log("model",msg) ;
         datamodel.server = msg ;
+        updateModel();
         updateView(datamodel) ;
     })
 
@@ -16,6 +17,8 @@ function load(){
 
     updateView(datamodel) ;
 }
+
+
 
 function gameStart(){
     console.log("gameStart") ;
@@ -35,20 +38,6 @@ function updateView(data){
     });
     var activeplayer = data.activeplayer ;
     if (document.getElementById(activeplayer)) document.getElementById(activeplayer).className = "activeplayer" ;
-}
-
-function toMinuteSeconds(milliseconds){
-    var seconds = Math.floor(milliseconds / 1000) ;
-    var minutes = Math.floor(seconds / 60) ;
-    var onlySixtySeconds = seconds - minutes * 60 ;
-    return minutes + " : " + onlySixtySeconds ;
-}
-
-function updateTimes(){
-    var now = new Date().getTime(); 
-    datamodel.elapsedGameSeconds = now - datamodel.gameStartTime ;
-    datamodel.gametime = toMinuteSeconds(datamodel.elapsedGameSeconds) ;
-    updateView(datamodel) ;
 }
 
 var datamodel = {
@@ -73,3 +62,29 @@ var datamodel = {
     "playerStartTime" : 0,
     "elapsedPlayerSeconds" : 0
 } ;
+
+function updateModel(){
+
+    if (datamodel.server.gameStarted == true){
+        datamodel.gamestatus = "Play" ;
+    } else {
+        datamodel.gamestatus = "Game over" ;
+    }
+
+    datamodel.gametime = datamodel.server.gametime ;
+
+    datamodel.team1 = datamodel.server.configuration.teams[0].name ;
+    datamodel.team2 = datamodel.server.configuration.teams[1].name ;
+    
+    datamodel.score1 = datamodel.server.configuration.teams[0].score ;
+    datamodel.score2 = datamodel.server.configuration.teams[1].score ;
+    
+    datamodel["player1-team1"] = datamodel.server.configuration.teams[0].players[0].name ;
+    datamodel["player2-team1"] = datamodel.server.configuration.teams[0].players[1].name ;
+    datamodel["player3-team1"] = datamodel.server.configuration.teams[0].players[2].name ;
+    datamodel["player4-team1"] = datamodel.server.configuration.teams[0].players[3].name ;
+    datamodel["player1-team2"] = datamodel.server.configuration.teams[1].players[0].name ;
+    datamodel["player2-team2"] = datamodel.server.configuration.teams[1].players[1].name ;
+    datamodel["player3-team2"] = datamodel.server.configuration.teams[1].players[2].name ;
+    datamodel["player4-team2"] = datamodel.server.configuration.teams[1].players[3].name ;
+}

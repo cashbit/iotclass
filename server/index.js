@@ -196,6 +196,7 @@ var datamodel = {
 
 var playerTimeout ;
 var gameTimeout ;
+var gameInterval ;
 
 function saveGame(){
     var filename = configuration.datalogfilename ;
@@ -218,8 +219,24 @@ function gameStart(){
     configuration.teams.forEach(function(team){
         team.score = 0 ;
     });
+    datamodel.gameStartTime = new Date().getTime() ;
     gameTimeout = setTimeout(gameStop,configuration.maxTimePerGame) ;
+    gameInterval = setInterval(updateTimes,500) ;
     choosePlayer();
+    saveGame();
+}
+
+function toMinuteSeconds(milliseconds){
+    var seconds = Math.floor(milliseconds / 1000) ;
+    var minutes = Math.floor(seconds / 60) ;
+    var onlySixtySeconds = seconds - minutes * 60 ;
+    return minutes + " : " + onlySixtySeconds ;
+}
+
+function updateTimes(){
+    var now = new Date().getTime(); 
+    datamodel.elapsedGameMilliSeconds = now - datamodel.gameStartTime ;
+    datamodel.gametime = toMinuteSeconds(datamodel.elapsedGameMilliSeconds) ;
     saveGame();
 }
 
@@ -229,6 +246,7 @@ function gameStop(){
     datamodel.gameStarted = false ;
     clearTimeout(playerTimeout) ;
     clearTimeout(gameTimeout) ;
+    clearTimeout(gameInterval) ;
     console.log("Game over !!!!") ;
     saveGame();
 }
